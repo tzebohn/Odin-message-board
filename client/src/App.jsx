@@ -2,10 +2,13 @@ import { useState } from 'react';
 import './App.css'
 import { IoIosAdd } from "react-icons/io";
 import MessageForm from './components/MessageForm';
+import axios from 'axios';
+import MessageBubble from './components/MessageBubble';
 
 function App() {
 
   const [showForm, setShowForm] = useState(false)
+  const [messages, setMessages] = useState([])
 
   /**
    * Sets setShowForm state to false.
@@ -19,8 +22,36 @@ function App() {
    * Submits message form data to backend server.
    * @param {Object} messageFormData 
    */
-  function handleSubmit (messageFormData) {
-    console.log("Submitting form to backend")
+  async function handleSubmit (messageFormData) {
+    // Instantly display temp message on frontend for user
+    const tempId = crypto.randomUUID()
+
+    const tempMessage = {
+      id: tempId,
+      ...messageFormData,
+      pending: true,
+      createdAt: Date.now()
+    }
+
+    setMessages(prev => [...prev, tempMessage])
+
+    // Send POST request to backend server
+    try {
+      const response = await axios.post("/api/posts/create-post", messageFormData)
+      const savedMessage = response.data
+      console.log(savedMessage)
+      // Replace temp message with real one
+      setMessages(prev => 
+        prev.map(msg => msg.id === tempId ? savedMessage : msg) // Replaces tempId with database ID
+      )
+
+    } catch (err) {
+      // Remove temp message on failure
+      setMessages(prev => 
+        prev.filter(msg => msg.id !== tempId)
+      )
+      console.error("Error submitting message:", err)
+    }
   }
 
   return (
@@ -32,7 +63,12 @@ function App() {
 
         <div className='flex-1 flex flex-col gap-2 min-h-0'>
           <div className='flex-1 p-2 overflow-y-auto'>
-            
+            {messages.map(msg => (
+              <MessageBubble 
+                key={msg.id}
+                msg={msg}
+              />
+            ))}
           </div>
           <button
             onClick={() => setShowForm(true)}
