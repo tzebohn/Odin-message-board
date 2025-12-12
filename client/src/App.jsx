@@ -4,11 +4,26 @@ import { IoIosAdd } from "react-icons/io";
 import MessageForm from './components/MessageForm';
 import axios from 'axios';
 import MessageBubble from './components/MessageBubble';
+import { useRef } from 'react';
+import { useEffect } from 'react';
 
 function App() {
 
-  const [showForm, setShowForm] = useState(false)
-  const [messages, setMessages] = useState([])
+  const [showForm, setShowForm] = useState(false) // Dynamically displays MessageForm
+  const [messages, setMessages] = useState([])    // Tracks all current messages
+
+  const bottomRef = useRef(null)                  // Points to the current bottom of the message container
+
+  /**
+   * Updates bottomRef whenever messages state changes.
+   * 
+   * Allows the message container to automatically scroll down
+   * when new messages are added.
+   */
+  useEffect(() => {
+    console.log("changing bottomref")
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages]) 
 
   /**
    * Sets setShowForm state to false.
@@ -50,6 +65,32 @@ function App() {
       setMessages(prev => 
         prev.filter(msg => msg.id !== tempId)
       )
+
+      // Extract backend error message
+      const backendErrors = err.response?.data?.errors
+
+      if (backendErrors && Array.isArray(backendErrors)) {
+        setMessages(prev => [
+          ...prev,
+          {
+            id: `error-${tempId}`,
+            type: "error",
+            text: backendErrors.map(e => e.msg).join(". "),
+            createAt: Date.now()
+          }
+        ])
+      } else {
+        setMessages(prev => [
+          ...prev,
+          {
+            id: `error-${tempId}`,
+            type: "error",
+            text: "Failed to send message. Please try again.",
+            createAt: Date.now()
+          }
+        ])
+      }
+
       console.error("Error submitting message:", err)
     }
   }
@@ -69,6 +110,7 @@ function App() {
                 msg={msg}
               />
             ))}
+            <div ref={bottomRef}></div>
           </div>
           <button
             onClick={() => setShowForm(true)}
