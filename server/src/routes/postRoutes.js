@@ -1,10 +1,19 @@
 import { Router } from "express";
-import { getAllPosts, createPost } from "../controllers/postController.js";
+import postController from "../controllers/postController.js";
+import { createPostValidator } from "../validators/createPostValidator.js";
+import { handleValidationErrors } from "../validators/handleValidationErrors.js";
 
 //  Create router object
 const router = Router()
 
-router.get('/get-posts', getAllPosts)   // GET /posts route
-router.post('/create-post', createPost)   // POST /posts route
+router.get('/get-posts', postController.getAllPosts)   // GET /posts route
+
+// POST /posts route
+router.post(
+    '/create-post',             // Path
+    createPostValidator,        // Validate form data
+    handleValidationErrors,     // Stop request if there are errors
+    postController.createPost   // controller runs only if valid
+)
 
 export default router;
