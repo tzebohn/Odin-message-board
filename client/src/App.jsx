@@ -14,6 +14,25 @@ function App() {
 
   const bottomRef = useRef(null)                  // Points to the current bottom of the message container
 
+
+  /**
+   * Fetches the 25 most current posts on component mount.
+   */
+  useEffect(() => {
+    async function fetchPosts () {
+      try {
+        const response = await axios.get("/api/posts/get-posts")
+        const posts = response.data
+        posts.reverse()
+        setMessages(posts)
+      } catch (err) {
+        console.error("Error fetching posts:", err)
+      }
+    }
+
+    fetchPosts()
+  }, [])
+
   /**
    * Updates bottomRef whenever messages state changes.
    * 
