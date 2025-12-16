@@ -1,8 +1,20 @@
-import { createPostService } from "../services/postService.js"
+import { createPostService, getPosts } from "../services/postService.js"
 import { censorText } from "../utils/profanity.js"
 
-function getAllPosts () {
-    console.log("Getting all posts")
+async function getAllPosts (req, res, next) {
+    
+    try {
+        let page = parseInt(req.query.page, 10)
+        let limit = parseInt(req.query.limit, 10)
+
+        if (Number.isNaN(page) || page < 1) page = 1                    // Default page is 1
+        if (Number.isNaN(limit) || limit < 1 || limit > 100) limit = 25 // Default limit is 25
+
+        const posts = await getPosts({ page, limit })
+        res.json(posts)
+    } catch (err) {
+        next(err)
+    }
 }
 
 async function createPost (req, res) {

@@ -16,4 +16,25 @@ export const Post = {
             createdAt: new Date().toISOString()
         }
     },
+    async get({ limit, offset }) {
+        // Ensure that limit and offset are numbers, not NaN
+        if (!Number.isInteger(limit) || !Number.isInteger(offset)) {
+            throw new Error("Invalid pagination values")
+        }
+        
+        const sqlQuery = `
+            SELECT 
+                id,
+                username,
+                message, 
+                created_at 
+            FROM posts
+            ORDER BY created_at DESC 
+            LIMIT ${Number(limit)} OFFSET ${Number(offset)}
+        `
+
+        const [rows] = await db.execute(sqlQuery)
+
+        return rows
+    }
 }
