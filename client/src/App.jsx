@@ -91,11 +91,31 @@ function App() {
   }, [])
 
   /**
-   * Fetches the 25 most current posts on component mount.
+   * Fetches the first page of messages on component mount.
    */
   useEffect(() => {
     fetchPosts(1)
   }, [fetchPosts])
+
+  /**
+   * Keeps auto fetching pages on component mount until inital message container 
+   * either overflows or no more older messages to load. 
+   * 
+   * Allows for better scroll handling. Without this the user may be unable to 
+   * load existing older messages when the message container isn't overflowed.
+   * When the message container is not overflowed, scrolling is disabled by default,
+   * which prevents the user from loading older existing messages.
+   */
+  useEffect(() => {
+    // Get message html container
+    const container = scrollContainerRef.current 
+    if (!container) return 
+    
+    // Keep loading the next page, until either the message container
+    // is scrollable or no more older messages to load.
+    if (!isScrollable(container) && hasMore && !loading) fetchPosts(page)
+
+  }, [messages, hasMore, loading, page, fetchPosts])
 
   /**
    * Updates bottomRef whenever messages state changes.
@@ -212,6 +232,17 @@ function App() {
 
       fetchPosts(page)
     }
+  }
+
+  /**
+   * Detects whether overflow scrolling exists in the current message container.
+   * 
+   * @param {*} container - The html message container that holds the message bubbles. 
+   * @returns {boolean}   - Returns true if overflow/scrolling does exist in message container,
+   *                      - Otherwises false
+   */
+  function isScrollable (container) {
+    return container.scrollHeight > container.clientHeight
   }
 
   return (
