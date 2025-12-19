@@ -6,6 +6,7 @@ import axios from 'axios';
 import MessageBubble from './components/MessageBubble';
 import { useRef } from 'react';
 import { useEffect } from 'react';
+import { socket } from './socket.js';
 
 function App() {
 
@@ -27,6 +28,22 @@ function App() {
   // Sync refs with according react states
   hasMoreRef.current = hasMore  // Tracks whether there are currently more pages to fetch
   loadingRef.current = loading  // Tracks whether we are already currently fetching
+
+  /**
+   * Connect to backend websocket on mount
+   */
+  useEffect(() => {
+    socket.connect()
+
+    socket.on("connect", () => {
+      console.log("Connected to socket:", socket.id)
+    })
+
+    return () => {
+      socket.off("connect")
+      socket.disconnect()
+    }
+  }, [])
 
   /**
    * Reusable GET function to fetch different pages of posts.
