@@ -33,14 +33,23 @@ function App() {
    * Connect to backend websocket on mount
    */
   useEffect(() => {
-    socket.connect()
+    socket.connect() 
 
+    // Register listeners first
     socket.on("connect", () => {
       console.log("Connected to socket:", socket.id)
     })
 
+    socket.on("new_post", (post) => {
+      console.log("Socket received new post:", post)
+      setMessages(prev => 
+        prev.map(msg => msg.id === post.tempId ? post : msg)
+      )
+    })
+
     return () => {
       socket.off("connect")
+      socket.off("new_post")
       socket.disconnect()
     }
   }, [])
@@ -188,13 +197,9 @@ function App() {
 
     // Send POST request to backend server
     try {
-      const response = await axios.post("/api/posts/create-post", messageFormData)
-      const savedMessage = response.data
-      console.log(savedMessage)
-      // Replace temp message with real one
-      setMessages(prev => 
-        prev.map(msg => msg.id === tempId ? savedMessage : msg) // Replaces tempId with database ID
-      )
+      const response = await axios.post("/api/posts/create-post", {...messageFormData, tempId})
+      // const savedMessage = response.data
+      // console.log(savedMessage)
 
     } catch (err) {
       // Remove temp message on failure

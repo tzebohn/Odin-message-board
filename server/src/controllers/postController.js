@@ -1,4 +1,5 @@
 import { createPostService, getPosts } from "../services/postService.js"
+import { getIO } from "../socket.js"
 import { censorText } from "../utils/profanity.js"
 
 async function getAllPosts (req, res, next) {
@@ -17,9 +18,9 @@ async function getAllPosts (req, res, next) {
     }
 }
 
-async function createPost (req, res) {
+async function createPost (req, res) { 
     try {
-        const { username, message } = req.body
+        const { username, message, tempId } = req.body
         
         // 1. Save ORIGINAL to DB
         const saved = await createPostService(username, message)
@@ -27,8 +28,15 @@ async function createPost (req, res) {
         // 2. Censor message ONLY for client display
         const censored = {
             ...saved,
-            message: censorText(saved.message)
+            message: censorText(saved.message),
+            tempId
         }
+
+        // Emit new post to ALL clients (real-time)
+        const io = getIO()
+        io.emit("new_post", censored)
+
+        // Respond ONLY to the sender
         return res.status(201).json(censored)
     }
     catch (err) {
