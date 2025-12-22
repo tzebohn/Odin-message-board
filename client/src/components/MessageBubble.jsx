@@ -1,8 +1,8 @@
 import { RxAvatar } from "react-icons/rx";
 import { MdError } from "react-icons/md";
+import { ImSpinner2 } from "react-icons/im";
 
 export default function MessageBubble ({ msg }) {
-
     return (
         <>
             {msg.type === "error" ? (
@@ -28,11 +28,20 @@ export default function MessageBubble ({ msg }) {
                             })}
                         </span>
                     </div>
-                    <div className="">
-                        <p className="inline-block bg-[#818CF8] text-white font-semibold text-sm sm:text-base whitespace-pre-line rounded-2xl p-2 py-1 sm:px-3 sm:py-2">{msg.message}</p>
+                    <div>
+                        <p 
+                            className={`relative inline-block bg-[#818CF8] text-white font-semibold 
+                                        text-sm sm:text-base whitespace-pre-line rounded-2xl 
+                                        py-2 p-3 ${msg.pending && "pr-6 sm:pr-7"}
+                                        shadow-md
+                                        ring-1 ring-white/20`}
+                        >
+                            <span>{msg.message}</span>
+                            {msg.pending && <ImSpinner2 className="absolute bottom-2 right-2 animate-spin text-[10px] sm:text-[11px] text-white drop-shadow-[0_0_2px_white]"/>}
+                        </p>
                     </div>
                 </div>
             )}
-        </>
+        </> 
     )
 }
