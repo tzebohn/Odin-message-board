@@ -30,11 +30,15 @@ export default function MessageBubble ({ msg }) {
                     </div>
                     <div>
                         <p 
-                            className={`relative inline-block bg-[#818CF8] text-white font-semibold 
+                            className={`relative inline-block text-white font-semibold 
                                         text-sm sm:text-base whitespace-pre-line rounded-2xl 
-                                        py-2 p-3 ${msg.pending && "pr-6 sm:pr-7"}
-                                        shadow-md
-                                        ring-1 ring-white/20`}
+                                        py-2 p-3 
+                                        ${msg.pending 
+                                            ? "pr-6 sm:pr-7 bg-gradient-to-br from-[#818CF8]/70 to-[#6366F1]/60 text-white/90 shadow-sm shadow-indigo-500/20 animate-pulse" 
+                                            : "bg-gradient-to-br from-[#818CF8] to-[#6366F1] text-white shadow-md shadow-indigo-500/40"
+                                        }
+                                        ring-1 ring-white/20
+                                        transition-all duration-200`}
                         >
                             <span>{msg.message}</span>
                             {msg.pending && <ImSpinner2 className="absolute bottom-2 right-2 animate-spin text-[10px] sm:text-[11px] text-white drop-shadow-[0_0_2px_white]"/>}
