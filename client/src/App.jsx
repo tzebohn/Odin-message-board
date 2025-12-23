@@ -269,7 +269,10 @@ function App() {
 
   return (
     <main className='h-screen flex items-center justify-center bg-[#0F172A]'>
-      <section className='relative flex flex-col border rounded-xl bg-[#1E293B] p-4 w-full max-w-[90%] sm:max-w-[500px] md:max-w-[600px] h-[700px]'>
+      <section 
+        className='relative flex flex-col rounded-xl bg-[#1E293B] p-4 w-full max-w-[90%] sm:max-w-[500px] md:max-w-[600px] h-[700px]
+                  shadow-lg shadow-[#1F2937] border-2 border-[#374151]'
+      >
         
         <div className="flex justify-center py-4">
           <h1
@@ -313,10 +316,12 @@ function App() {
           </div>
           <button
             onClick={() => setShowForm(true)}
-            className='flex items-center justify-center gap-2 bg-[#818CF8] rounded-lg cursor-pointer hover:bg-[#4FC3F7] p-2'
+            className='flex items-center justify-center gap-2 bg-[#818CF8] text-white rounded-lg cursor-pointer 
+                      hover:bg-gradient-to-r hover:from-[#6EC1F7] hover:to-[#4A90E2] hover:scale-103 transition-all duration-300 ease-in-out
+                      shadow-md hover:shadow-lg p-3'
           >
-            <IoIosAdd className="text-xl text-white" />
-            <span className='text-[#F8FAFC] font-semibold'>New Message</span>
+            <IoIosAdd className="text-2xl sm:text-3xl drop-shadow-[0_0_1px_white]" />
+            <span className='font-sans font-semibold text-lg sm:text-xl tracking-wide'>New Message</span>
           </button>
         </div>
 
