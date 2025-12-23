@@ -48,17 +48,26 @@ export default function MessageForm ({ onClose, onSubmit }) {
                         onChange={(e) => setUsername(e.target.value)}
                     />
 
-                    <textarea
-                        placeholder="Your message..."
-                        className={`p-2 rounded bg-[#334155] text-white h-24 resize-none outline-none focus:ring-2 focus:ring-blue-500 ${errors.message && "border-2 border-red-500 focus:border-transparent"}`}
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                    />
+                    <div>
+                        <textarea
+                            placeholder="Your message..."
+                            className={`w-full p-2 rounded bg-[#334155] text-white h-24 resize-none outline-none focus:ring-2 focus:ring-blue-500 ${errors.message && "border-2 border-red-500 focus:border-transparent"}`}
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                        />
+                        <span
+                            className={`flex justify-end text-xs text-right
+                            ${message.length >= 500 ? "text-red-400" : "text-gray-400"}
+                            `}
+                        >
+                            {message.length}/500
+                        </span>
+                    </div>
 
                     <div className="flex gap-2 justify-end">
                         <button
                             type="button"
-                            className="px-3 py-1 rounded bg-gray-500 hover:bg-gray-600 text-white cursor-pointer"
+                            className="px-3 py-1 rounded bg-gray-500 hover:bg-gray-600 text-white font-semibold cursor-pointer"
                             onClick={onClose}
                         >
                         Cancel
@@ -66,7 +75,7 @@ export default function MessageForm ({ onClose, onSubmit }) {
 
                         <button
                             type="submit"
-                            className="px-3 py-1 rounded bg-[#818CF8] hover:bg-[#4FC3F7] text-white cursor-pointer"
+                            className="px-3 py-1 rounded bg-[#818CF8] hover:bg-[#4FC3F7] text-white font-semibold cursor-pointer"
                         >
                         Send
                         </button>
