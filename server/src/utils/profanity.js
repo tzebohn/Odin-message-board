@@ -41,7 +41,12 @@ function normalizeTextForDetection (str = "") {
  */
 export function containsProfanity (text) {
     const normalized = normalizeTextForDetection(text)
-    return leoProfanity.check(normalized)
+    
+    for (const badWord of dictionary) {
+        if (normalized.includes(badWord)) return true
+    }
+
+    return false
 }
 
 
