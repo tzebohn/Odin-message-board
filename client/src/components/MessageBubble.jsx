@@ -31,7 +31,7 @@ export default function MessageBubble ({ msg }) {
                     <div>
                         <p 
                             className={`relative inline-block text-white font-semibold 
-                                        text-sm sm:text-base whitespace-pre-line rounded-2xl 
+                                        text-sm sm:text-base whitespace-pre-line break-all rounded-2xl 
                                         py-2 p-3 
                                         ${msg.pending 
                                             ? "pr-6 sm:pr-7 bg-gradient-to-br from-[#818CF8]/70 to-[#6366F1]/60 text-white/90 shadow-sm shadow-indigo-500/20 animate-pulse" 
