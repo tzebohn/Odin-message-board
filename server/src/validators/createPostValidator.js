@@ -11,7 +11,7 @@ export const createPostValidator = [
         .withMessage("Username may only contain letters, numbers, and underscores")
 
         // Length rule
-        .isLength({ min:3, max: 50})
+        .isLength({ min:3, max: 20})
         .withMessage("Username must be between 3 and 20 characters")
 
         // Profanity check
