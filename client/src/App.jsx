@@ -8,6 +8,8 @@ import { useRef } from 'react';
 import { useEffect } from 'react';
 import { socket } from './socket.js';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+
 function App() {
 
   const [showForm, setShowForm] = useState(false) // Dynamically displays MessageForm
@@ -72,7 +74,7 @@ function App() {
     if (loadingRef.current || !hasMoreRef.current) return
 
     try {
-      const response = await axios.get("/api/posts/get-posts", {
+      const response = await axios.get(`${API_BASE_URL}/api/posts/get-posts`, {
         params: {
           page: pageToLoad,
           limit: 10
@@ -197,7 +199,7 @@ function App() {
 
     // Send POST request to backend server
     try {
-      const response = await axios.post("/api/posts/create-post", {...messageFormData, tempId})
+      const response = await axios.post(`${API_BASE_URL}/api/posts/create-post`, {...messageFormData, tempId})
       // const savedMessage = response.data
       // console.log(savedMessage)
 
