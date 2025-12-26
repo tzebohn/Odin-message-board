@@ -3,7 +3,7 @@ import app from "./app.js";
 import { db } from "./db/db.js";
 import { initSocket } from "./socket.js";
 
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 
 //  Connect to database
 db.query('SELECT 1')
